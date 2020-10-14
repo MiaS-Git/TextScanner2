@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,32 +24,31 @@ import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.firebase.ml.vision.text.FirebaseVisionText;
 import com.google.firebase.ml.vision.text.FirebaseVisionTextRecognizer;
 
-import static java.nio.file.Paths.get;
-
 public class MainActivity extends AppCompatActivity {
 
     ImageView imageView;
     TextView textView;
+    Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         //find imageview
-        findViewById(R.id.imageId);
-        //Find textview
-        findViewById(R.id.textId);
-        //Check app permisssions for Camera
-        if(checkSelfPermission(Manifest.permission.CAMERA) !=  PackageManager.PERMISSION_GRANTED){
-            //Grant permission
+        imageView = findViewById(R.id.imageId);
+        //find textview
+        textView = findViewById(R.id.textId);
+
+        button = findViewById(R.id.button);
+        //check app level permission is granted for Camera
+        if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
+            //grant the permission
             requestPermissions(new String[]{Manifest.permission.CAMERA}, 101);
+
         }
     }
 
-    //TODO: Complete this method(it is within the activity_main.xml)
     public void doProcess(View view) {
-        //open camera > make an intent object
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(intent, 101);
     }
@@ -57,34 +57,43 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Bundle bundle = data.getExtras();
-        //Extract image
+
         Bitmap bitmap = (Bitmap) bundle.get("data");
-        //Set image
+
         imageView.setImageBitmap(bitmap);
-        //process image
-        FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(bitmap);
-        // Instance of Vision
+
         FirebaseVisionImage firebaseVisionImage = FirebaseVisionImage.fromBitmap(bitmap);
+
         FirebaseVision firebaseVision = FirebaseVision.getInstance();
-        FirebaseVisionTextRecognizer firebaseVisionTextRecognizer = firebaseVision.getCloudTextRecognizer();
-        //Process Image
-        Task<FirebaseVisionText> task = firebaseVisionTextRecognizer.processImage(firebaseVisionImage);
-        //After Success/Failure
+
+        FirebaseVisionTextRecognizer firebaseVisionTextRecognizer = firebaseVision.getOnDeviceTextRecognizer();
+
+        final Task<FirebaseVisionText> task = firebaseVisionTextRecognizer.processImage(firebaseVisionImage);
+
         task.addOnSuccessListener(new OnSuccessListener<FirebaseVisionText>() {
             @Override
             public void onSuccess(FirebaseVisionText firebaseVisionText) {
-                String ingredients = firebaseVisionText.getText();
-                textView.setText(ingredients);
+               final String s = firebaseVisionText.getText();
+                textView.setText(s);
+                button =  findViewById(R.id.button);
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent inten = new Intent(MainActivity.this, ScrappedActivity.class);
+                        inten.putExtra("Value", s);
+                        startActivity(inten);
+                        finish();
+                    }
+                });
             }
         });
+
+
         task.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-
             }
         });
-
-
     }
 }

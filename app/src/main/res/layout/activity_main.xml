@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:padding="20sp"
     tools:context=".MainActivity">
 
     <ImageView
@@ -13,12 +14,22 @@
         android:id="@+id/imageId"/>
     <Button
         android:text="@string/take_picture"
+        android:textSize="20sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="doProcess"/>
-    <TextView
+    <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/textId"/>
+        android:id="@+id/textId"
+        android:padding="20sp"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textId"
+        android:text="@string/submit"
+        android:textSize="20sp"
+        android:id="@+id/button"/>
+
 
 </LinearLayout>
