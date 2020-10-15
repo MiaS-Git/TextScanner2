@@ -5,15 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ScrappedActivity">
+<androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/recyclerView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"/>
 
-    <TextView
+    <ProgressBar
+        android:id="@+id/progressBar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Value"
-        android:textSize="25sp"
-        android:textColor="@color/colorAccent"
-        android:gravity="center"
-        android:id="@+id/textView"/>
+      />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

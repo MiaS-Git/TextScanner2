@@ -21,12 +21,12 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/textId"
+        android:id="@+id/editTextId"
         android:padding="20sp"/>
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/textId"
+        android:layout_below="@id/editTextId"
         android:text="@string/submit"
         android:textSize="20sp"
         android:id="@+id/button"/>
